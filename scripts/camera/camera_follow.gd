@@ -18,18 +18,26 @@ class_name CameraFollow
 
 
 func _ready() -> void:
+	# Defer target search to ensure all nodes are ready
+	_find_target.call_deferred()
+
+
+func _find_target() -> void:
 	# Auto-find player if no target assigned
 	if target == null:
 		var player := get_tree().get_first_node_in_group("players")
 		if player != null and player is Node3D:
 			target = player as Node3D
 		else:
-			# Fallback: find by class name
+			# Fallback: search all nodes in group
 			var nodes := get_tree().get_nodes_in_group("players")
 			for node in nodes:
 				if node is Node3D:
 					target = node as Node3D
 					break
+
+	if target == null:
+		push_error("CameraFollow: No target found! Make sure player is in 'players' group.")
 
 
 func _process(delta: float) -> void:
