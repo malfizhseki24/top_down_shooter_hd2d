@@ -1,0 +1,25 @@
+[remap]
+
+importer="wavefront_obj"
+importer_version=1
+type="Mesh"
+uid="uid://dkp6ka7j3dtn4"
+path="res://.godot/imported/hanging_moss.obj-4f42a600d60f9c02db10e22f4dd984a2.mesh"
+
+[deps]
+
+files=["res://.godot/imported/hanging_moss.obj-4f42a600d60f9c02db10e22f4dd984a2.mesh"]
+
+source_file="res://assets/3d/kenney_nature-kit/hanging_moss.obj"
+dest_files=["res://.godot/imported/hanging_moss.obj-4f42a600d60f9c02db10e22f4dd984a2.mesh", "res://.godot/imported/hanging_moss.obj-4f42a600d60f9c02db10e22f4dd984a2.mesh"]
+
+[params]
+
+generate_tangents=true
+generate_lods=true
+generate_shadow_mesh=true
+generate_lightmap_uv2=false
+generate_lightmap_uv2_texel_size=0.2
+scale_mesh=Vector3(1, 1, 1)
+offset_mesh=Vector3(0, 0, 0)
+force_disable_mesh_compression=false

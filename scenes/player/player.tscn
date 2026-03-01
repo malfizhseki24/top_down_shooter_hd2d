@@ -1,0 +1,40 @@
+[gd_scene load_steps=4 format=3 uid="uid://b1lt0eh7dv4fs"]
+
+[ext_resource type="Script" path="res://scripts/player/player_controller.gd" id="1_script"]
+[ext_resource type="SpriteFrames" uid="uid://bn17x8k8ibt6y" path="res://resources/player_frames.tres" id="2_frames"]
+
+[sub_resource type="CylinderShape3D" id="CylinderShape3D_1"]
+height = 1.0
+radius = 0.3
+
+[sub_resource type="CylinderShape3D" id="CylinderShape3D_2"]
+height = 1.0
+radius = 0.35
+
+[node name="Player" type="CharacterBody3D" unique_id=1553229447]
+script = ExtResource("1_script")
+collision_layer = 2
+collision_mask = 5
+
+[node name="AnimatedSprite3D" type="AnimatedSprite3D" parent="." unique_id=36557463]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0)
+billboard = 1
+texture_filter = 4
+sprite_frames = ExtResource("2_frames")
+animation = &"idle"
+autoplay = "idle"
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=75177909]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0)
+shape = SubResource("CylinderShape3D_1")
+
+[node name="GunMarker" type="Node3D" parent="." unique_id=981664801]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0)
+
+[node name="Hurtbox" type="Area3D" parent="." unique_id=736428337]
+collision_layer = 32
+collision_mask = 16
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Hurtbox" unique_id=157225660]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0)
+shape = SubResource("CylinderShape3D_2")
