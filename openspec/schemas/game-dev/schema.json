@@ -1,0 +1,11 @@
+{
+  "name": "game-dev",
+  "description": "Game development workflow for Godot 4.6",
+  "templates": {
+    "proposal": "templates/proposal.md",
+    "spec": "templates/spec.md",
+    "design": "templates/design.md",
+    "tasks": "templates/tasks.md"
+  },
+  "project_template": "templates/project.md"
+}
