@@ -13,14 +13,31 @@ Project Kasuari is a top-down action game where players control a warrior (or th
 
 ## Features
 
-### Implemented (Phase 1)
+### Implemented
+**Core Systems**
 - [x] Player movement (WASD) in 3D space (X-Z axis)
 - [x] Mouse aiming with sprite orientation
 - [x] Smooth camera follow system
 - [x] Crosshair UI with hidden cursor
+- [x] Shooting mechanics with arrow projectiles
+- [x] Object pooling system for efficient object reuse
+
+**Levels & Environment**
+- [x] Forest level (`forest_01`) with GridMap terrain
+- [x] Nature mesh library (Kenney Nature Kit integration)
+- [x] Ground tiles, trees, and rock decorations
+
+**Visual Effects**
+- [x] Lighting system (directional sun, ambient, accent lights)
+- [x] Post-processing pipeline:
+  - ACES tonemapper for cinematic look
+  - Depth of Field (DoF) blur
+  - SSAO for depth perception
+  - Vignette and glow effects
+  - Volumetric fog with god rays
+- [x] Pixel-perfect texture filtering (nearest-neighbor)
 
 ### Planned
-- [ ] Shooting mechanics
 - [ ] Dash with i-frames
 - [ ] Enemy AI and spawning
 - [ ] Health system
@@ -33,7 +50,7 @@ Project Kasuari is a top-down action game where players control a warrior (or th
 |-------|--------|
 | **WASD** | Movement |
 | **Mouse** | Aim |
-| **Left Click** | Shoot (planned) |
+| **Left Click** | Shoot arrows |
 | **Space** | Dash (planned) |
 
 ## Tech Stack
@@ -43,6 +60,7 @@ Project Kasuari is a top-down action game where players control a warrior (or th
 - **Renderer**: Forward+
 - **3D Assets**: Kenney Nature Kit (CC0)
 - **Architecture**: Component-based with autoload singletons
+- **Performance**: Object pooling for projectile reuse
 
 ## Project Structure
 
@@ -51,26 +69,28 @@ res://
 ├── scenes/
 │   ├── player/          # Player scene and components
 │   ├── enemies/         # Enemy templates
-│   ├── effects/         # VFX scenes
+│   ├── effects/         # VFX scenes (arrows, particles)
 │   ├── ui/              # HUD, crosshair
-│   └── levels/          # Game levels
+│   └── levels/          # Game levels (forest_01, test_player)
 ├── scripts/
-│   ├── autoload/        # Game, Events, ObjectPool
-│   ├── player/          # Player controllers
+│   ├── autoload/        # ObjectPool singleton
+│   ├── player/          # Player controller
+│   ├── effects/         # Arrow behavior
 │   ├── enemies/         # Enemy AI
-│   └── ui/              # UI scripts
+│   └── utils/           # GridMap utilities
 ├── assets/
-│   ├── 3d/              # Kenney Nature Kit
-│   ├── sprites/         # 2D character sprites
+│   ├── 3d/              # Kenney Nature Kit (GLB meshes)
+│   ├── sprites/         # 2D character sprites, effects
 │   └── audio/           # SFX and music
-└── resources/           # Weapon resources
+├── resources/           # Mesh libraries, map data
+└── shaders/             # Custom shaders (tilt-shift)
 ```
 
 ## Getting Started
 
 1. Clone the repository
 2. Open project in Godot 4.6+
-3. Run `scenes/levels/test_player.tscn` to test
+3. Run `scenes/levels/forest_01.tscn` to play (or `test_player.tscn` for testing)
 
 ## Documentation
 
