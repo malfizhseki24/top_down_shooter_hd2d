@@ -1,12 +1,110 @@
-[gd_scene load_steps=3 format=3]
+[gd_scene format=3 uid="uid://dhrdqi3kw7cjl"]
 
-[ext_resource type="Script" path="res://scripts/ui/hud.gd" id="1_hud"]
-[ext_resource type="Texture2D" path="res://assets/sprites/ui/crosshair.svg" id="2_crosshair"]
+[ext_resource type="Script" uid="uid://8yn0wjsf3mwi" path="res://scripts/ui/hud.gd" id="1_hud"]
+[ext_resource type="Texture2D" uid="uid://1cudesol0cew" path="res://assets/sprites/ui/crosshair.svg" id="2_crosshair"]
 
-[node name="HUD" type="CanvasLayer"]
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_health_bg"]
+bg_color = Color(0.15, 0.15, 0.15, 0.8)
+corner_radius_top_left = 3
+corner_radius_top_right = 3
+corner_radius_bottom_right = 3
+corner_radius_bottom_left = 3
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_health_fill"]
+bg_color = Color(0.8, 0.15, 0.15, 1)
+corner_radius_top_left = 3
+corner_radius_top_right = 3
+corner_radius_bottom_right = 3
+corner_radius_bottom_left = 3
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_dash_bg"]
+bg_color = Color(0.15, 0.15, 0.15, 0.8)
+corner_radius_top_left = 2
+corner_radius_top_right = 2
+corner_radius_bottom_right = 2
+corner_radius_bottom_left = 2
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_dash_fill"]
+bg_color = Color(0.2, 0.7, 0.9, 1)
+corner_radius_top_left = 2
+corner_radius_top_right = 2
+corner_radius_bottom_right = 2
+corner_radius_bottom_left = 2
+
+[node name="HUD" type="CanvasLayer" unique_id=401207732]
+layer = 101
 script = ExtResource("1_hud")
 
-[node name="Crosshair" type="TextureRect" parent="."]
+[node name="Crosshair" type="TextureRect" parent="." unique_id=1579945632]
 texture_filter = 1
 texture = ExtResource("2_crosshair")
 stretch_mode = 4
+
+[node name="HealthBar" type="ProgressBar" parent="." unique_id=1573469241]
+offset_left = 20.0
+offset_top = 20.0
+offset_right = 220.0
+offset_bottom = 36.0
+theme_override_styles/background = SubResource("StyleBoxFlat_health_bg")
+theme_override_styles/fill = SubResource("StyleBoxFlat_health_fill")
+value = 100.0
+show_percentage = false
+
+[node name="DashBar" type="ProgressBar" parent="." unique_id=431737082]
+offset_left = 20.0
+offset_top = 42.0
+offset_right = 120.0
+offset_bottom = 50.0
+theme_override_styles/background = SubResource("StyleBoxFlat_dash_bg")
+theme_override_styles/fill = SubResource("StyleBoxFlat_dash_fill")
+value = 100.0
+show_percentage = false
+
+[node name="Vignette" type="ColorRect" parent="." unique_id=1012004351]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+color = Color(0.8, 0, 0, 0)
+
+[node name="DeathScreen" type="ColorRect" parent="." unique_id=1519898344]
+visible = false
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+color = Color(0, 0, 0, 0)
+
+[node name="VBoxContainer" type="VBoxContainer" parent="DeathScreen" unique_id=599169855]
+layout_mode = 0
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -60.0
+offset_top = -50.0
+offset_right = 60.0
+offset_bottom = 50.0
+grow_horizontal = 2
+grow_vertical = 2
+alignment = 1
+
+[node name="Label" type="Label" parent="DeathScreen/VBoxContainer" unique_id=1534311075]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.8, 0.15, 0.15, 1)
+theme_override_font_sizes/font_size = 48
+text = "YOU DIED"
+horizontal_alignment = 1
+
+[node name="Spacer" type="Control" parent="DeathScreen/VBoxContainer" unique_id=1319692023]
+custom_minimum_size = Vector2(0, 20)
+layout_mode = 2
+
+[node name="RestartButton" type="Button" parent="DeathScreen/VBoxContainer" unique_id=1514767623]
+custom_minimum_size = Vector2(120, 40)
+layout_mode = 2
+text = "Restart"

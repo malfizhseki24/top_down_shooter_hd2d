@@ -181,7 +181,7 @@ func _shoot() -> void:
 	spawn_pos.y = maxf(spawn_pos.y, 0.5)
 	bullet.position = spawn_pos
 
-	get_tree().root.add_child(bullet)
+	get_tree().current_scene.add_child(bullet)
 
 	# Rotate bullet to face direction
 	var look_target := spawn_pos + direction * 10.0

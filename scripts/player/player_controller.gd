@@ -4,12 +4,12 @@
 ## Sprite faces the mouse cursor for twin-stick shooter mechanics.
 ## Shooting mechanics allow firing arrows toward mouse cursor.
 ## Dash mechanic provides quick evasion with i-frames.
+## Damage feedback: hit flash, knockback, i-frames, death handling.
 
 extends CharacterBody3D
 class_name PlayerController
 
 ## Movement speed in units per second.
-## Adjust this value in the Inspector for game balancing.
 @export var movement_speed: float = 5.0
 
 ## Arrow scene to instantiate when shooting.
@@ -27,6 +27,12 @@ class_name PlayerController
 ## Dash cooldown in seconds.
 @export var dash_cooldown: float = 0.5
 
+## Knockback strength when hit by enemy.
+@export var knockback_strength: float = 5.0
+
+## Invulnerability duration after taking damage.
+@export var invuln_duration: float = 0.3
+
 @onready var animated_sprite: AnimatedSprite3D = $AnimatedSprite3D
 @onready var gun_marker: Node3D = $GunMarker
 @onready var hurtbox: HurtboxComponent = $Hurtbox
@@ -43,6 +49,11 @@ var _dash_cooldown_timer: float = 0.0
 var _dash_direction: Vector3 = Vector3.FORWARD
 var _last_movement_direction: Vector3 = Vector3.FORWARD
 
+# Damage feedback
+var _knockback_velocity: Vector3 = Vector3.ZERO
+var _is_invulnerable: bool = false
+var _is_dead: bool = false
+
 
 func _ready() -> void:
 	add_to_group("players")
@@ -58,11 +69,17 @@ func _ready() -> void:
 
 
 func _physics_process(delta: float) -> void:
+	if _is_dead:
+		return
+
 	# Update cooldown timers
 	if _cooldown_timer > 0:
 		_cooldown_timer -= delta
 	if _dash_cooldown_timer > 0:
 		_dash_cooldown_timer -= delta
+
+	# Decay knockback
+	_knockback_velocity = _knockback_velocity.lerp(Vector3.ZERO, 10.0 * delta)
 
 	# Handle state machine
 	match current_state:
@@ -73,6 +90,8 @@ func _physics_process(delta: float) -> void:
 
 
 func _input(event: InputEvent) -> void:
+	if _is_dead:
+		return
 	if event.is_action_pressed("shoot"):
 		_shoot()
 	elif event.is_action_pressed("dash"):
@@ -93,7 +112,7 @@ func _on_animation_finished() -> void:
 			animated_sprite.play(&"running")
 
 
-## NORMAL STATE HANDERS
+## NORMAL STATE HANDLERS
 
 func _handle_normal_movement(delta: float) -> void:
 	# Read WASD input as a 2D vector
@@ -106,9 +125,9 @@ func _handle_normal_movement(delta: float) -> void:
 	if direction != Vector3.ZERO:
 		_last_movement_direction = direction
 
-	# Apply velocity for movement
-	velocity.x = direction.x * movement_speed
-	velocity.z = direction.z * movement_speed
+	# Apply velocity for movement + knockback
+	velocity.x = direction.x * movement_speed + _knockback_velocity.x
+	velocity.z = direction.z * movement_speed + _knockback_velocity.z
 
 	# Update animation based on movement
 	_update_animation(direction)
@@ -120,7 +139,7 @@ func _handle_normal_movement(delta: float) -> void:
 	move_and_slide()
 
 
-## DASHING STATE HANDERS
+## DASHING STATE HANDLERS
 
 func _handle_dash(delta: float) -> void:
 	# Update dash timer
@@ -180,12 +199,13 @@ func _start_dash() -> void:
 func _end_dash() -> void:
 	current_state = State.NORMAL
 
-	# Disable i-frames (re-enable hurtbox)
-	hurtbox.set_deferred("monitoring", true)
-	hurtbox.set_deferred("monitorable", true)
+	# Disable i-frames (re-enable hurtbox) only if not in damage i-frames
+	if not _is_invulnerable:
+		hurtbox.set_deferred("monitoring", true)
+		hurtbox.set_deferred("monitorable", true)
 
-	# Disable invulnerability on health component
-	if health:
+	# Disable invulnerability on health component (unless damage i-frames active)
+	if health and not _is_invulnerable:
 		health.is_invulnerable = false
 
 	# Reset animation speed scale
@@ -304,13 +324,63 @@ func _shoot() -> void:
 ## HEALTH SYSTEM HANDLERS
 
 func _on_hurtbox_damage_received(hitbox: HitboxComponent) -> void:
-	# Delegate damage to HealthComponent
+	if _is_invulnerable or _is_dead:
+		return
+
+	# Apply damage
 	if health:
 		health.take_damage(hitbox.damage)
 
+	# Knockback away from hitbox source
+	var knockback_dir := (global_position - hitbox.global_position).normalized()
+	knockback_dir.y = 0
+	_knockback_velocity = knockback_dir * knockback_strength
+
+	# Hit flash + brief invulnerability
+	_play_hit_flash()
+	_start_invulnerability(invuln_duration)
+
+	# Emit event for camera shake, HUD vignette
+	Events.player_damaged.emit(hitbox.damage)
+
 
 func _on_player_died() -> void:
-	# For MVP: Print death message to console
-	# (Death screen/game over will be added in Phase 4.5)
-	print("Player died!")
-	# TODO: Trigger game over screen, respawn, etc.
+	if _is_dead:
+		return
+	_is_dead = true
+
+	# Emit event for HUD death screen
+	Events.player_died.emit()
+
+	# Visual death: flash white then fade out
+	if animated_sprite:
+		var tween := create_tween()
+		tween.tween_property(animated_sprite, "modulate", Color(3, 3, 3, 1), 0.1)
+		tween.tween_property(animated_sprite, "modulate", Color(1, 1, 1, 0.3), 0.4)
+
+
+func _play_hit_flash() -> void:
+	if not animated_sprite:
+		return
+	var tween := create_tween()
+	tween.tween_property(animated_sprite, "modulate", Color(3, 3, 3, 1), 0.05)
+	tween.tween_property(animated_sprite, "modulate", Color.WHITE, 0.1)
+
+
+func _start_invulnerability(duration: float) -> void:
+	_is_invulnerable = true
+	if hurtbox:
+		hurtbox.set_invulnerable(true)
+	if health:
+		health.is_invulnerable = true
+	get_tree().create_timer(duration).timeout.connect(_end_invulnerability)
+
+
+func _end_invulnerability() -> void:
+	_is_invulnerable = false
+	# Only re-enable hurtbox if not currently dashing
+	if current_state != State.DASHING:
+		if hurtbox:
+			hurtbox.set_invulnerable(false)
+		if health:
+			health.is_invulnerable = false

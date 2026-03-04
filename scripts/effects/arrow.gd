@@ -13,6 +13,8 @@ class_name Arrow
 ## Time in seconds before arrow despawns.
 @export var lifetime: float = 3.0
 
+const HIT_EFFECT_SCENE := preload("res://scenes/effects/hit_effect.tscn")
+
 @onready var hitbox: HitboxComponent = $Hitbox
 
 var _direction: Vector3 = Vector3.FORWARD
@@ -76,7 +78,7 @@ func _despawn() -> void:
 func _on_body_entered(_body: Node) -> void:
 	if not _is_active:
 		return
-	# Arrow hit world geometry - stop and despawn
+	_spawn_hit_effect()
 	_despawn()
 
 
@@ -85,5 +87,12 @@ func _on_body_entered(_body: Node) -> void:
 func _on_hit_hurtbox(_hurtbox: HurtboxComponent) -> void:
 	if not _is_active:
 		return
-	# Arrow hit enemy - despawn
+	_spawn_hit_effect()
 	_despawn()
+
+
+## Spawn hit particle effect at impact point.
+func _spawn_hit_effect() -> void:
+	var effect := HIT_EFFECT_SCENE.instantiate()
+	effect.position = global_position
+	get_tree().current_scene.add_child(effect)

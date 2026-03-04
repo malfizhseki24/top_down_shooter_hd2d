@@ -47,6 +47,9 @@ class Pool extends RefCounted:
 	## Acquire an instance from the pool.
 	## Returns null if pool is exhausted and cannot expand.
 	func acquire() -> Node:
+		# Purge any freed instances (e.g. after scene reload)
+		_purge_freed()
+
 		if _available.is_empty():
 			if not _expand():
 				push_error("ObjectPool: Pool '%s' exhausted and cannot expand" % _type)
@@ -59,6 +62,9 @@ class Pool extends RefCounted:
 
 	## Release an instance back to the pool.
 	func release(node: Node) -> void:
+		if not is_instance_valid(node):
+			return
+
 		var idx := _in_use.find(node)
 		if idx < 0:
 			push_warning("ObjectPool: Attempted to release non-pooled object to '%s'" % _type)
@@ -76,6 +82,17 @@ class Pool extends RefCounted:
 	## Get total pool size (available + in-use).
 	func get_total_size() -> int:
 		return _available.size() + _in_use.size()
+
+
+	## Remove freed instances from both available and in-use arrays.
+	## This handles scene reloads where pooled nodes get freed.
+	func _purge_freed() -> void:
+		for i in range(_available.size() - 1, -1, -1):
+			if not is_instance_valid(_available[i]):
+				_available.remove_at(i)
+		for i in range(_in_use.size() - 1, -1, -1):
+			if not is_instance_valid(_in_use[i]):
+				_in_use.remove_at(i)
 
 
 	## Expand pool by creating one new instance.

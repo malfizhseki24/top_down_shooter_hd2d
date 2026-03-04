@@ -6,6 +6,8 @@
 extends CharacterBody3D
 class_name EnemyBase
 
+const DEATH_EFFECT_SCENE := preload("res://scenes/effects/death_effect.tscn")
+
 ## Movement speed toward player in units per second.
 @export var move_speed: float = 3.0
 
@@ -134,6 +136,11 @@ func _on_died() -> void:
 		collision_shape.set_deferred("disabled", true)
 	if hurtbox:
 		hurtbox.set_invulnerable(true)
+
+	# Spawn death particle effect
+	var effect := DEATH_EFFECT_SCENE.instantiate()
+	effect.position = global_position
+	get_tree().current_scene.add_child(effect)
 
 	# Death animation: flash white, then shrink + fade
 	_play_death_animation()
