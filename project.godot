@@ -24,6 +24,7 @@ config/icon="res://icon.svg"
 Game="*res://scripts/autoload/game.gd"
 Events="*res://scripts/autoload/events.gd"
 ObjectPool="*res://scripts/autoload/object_pool.gd"
+AudioManager="*res://scripts/autoload/audio_manager.gd"
 
 [display]
 

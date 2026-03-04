@@ -87,6 +87,7 @@ func _on_body_entered(_body: Node) -> void:
 func _on_hit_hurtbox(_hurtbox: HurtboxComponent) -> void:
 	if not _is_active:
 		return
+	Events.arrow_hit.emit()
 	_spawn_hit_effect()
 	_despawn()
 

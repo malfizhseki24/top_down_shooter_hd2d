@@ -13,6 +13,9 @@ signal player_died()
 signal player_shot()
 signal player_dashed()
 
+# Combat events
+signal arrow_hit()
+
 # Game events
 signal wave_started(wave_number: int)
 signal wave_completed(wave_number: int)
