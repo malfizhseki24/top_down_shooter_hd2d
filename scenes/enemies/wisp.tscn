@@ -1,6 +1,6 @@
 [gd_scene format=3 uid="uid://cwisp0001"]
 
-[ext_resource type="Script" path="res://scripts/enemies/wisp.gd" id="1_script"]
+[ext_resource type="Script" uid="uid://b8vbaq1f0hvv5" path="res://scripts/enemies/wisp.gd" id="1_script"]
 [ext_resource type="SpriteFrames" uid="uid://bpwk482p48t0w" path="res://resources/enemy_frames.tres" id="2_frames"]
 [ext_resource type="PackedScene" uid="uid://dh8qk5n2h6m7b" path="res://scenes/components/hurtbox_component.tscn" id="3_hurtbox"]
 [ext_resource type="PackedScene" uid="uid://dh0k8b0x3grmw" path="res://scenes/components/health_component.tscn" id="4_health"]
@@ -9,30 +9,25 @@
 height = 0.5
 radius = 0.25
 
-[node name="Wisp" type="CharacterBody3D"]
+[node name="Wisp" type="CharacterBody3D" unique_id=1275743074]
 collision_layer = 4
 collision_mask = 5
 script = ExtResource("1_script")
 move_speed = 2.0
 max_health = 2
-preferred_distance = 8.0
-min_distance = 4.0
-attack_cooldown = 1.5
-bullet_speed = 10.0
-bullet_damage = 1
 
-[node name="AnimatedSprite3D" type="AnimatedSprite3D" parent="."]
-transform = Transform3D(0.5, 0, 0, 0, 0.5, 0, 0, 0, 0.5, 0, 0.5, 0)
+[node name="AnimatedSprite3D" type="AnimatedSprite3D" parent="." unique_id=1721647144]
+transform = Transform3D(0.5, 0, 0, 0, 0.5, 0, 0, 0, 0.5, 0, 0.29969245, 0)
 billboard = 1
 texture_filter = 4
 sprite_frames = ExtResource("2_frames")
 animation = &"idle"
 autoplay = "idle"
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+[node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=110066895]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.25, 0)
 shape = SubResource("CylinderShape3D_1")
 
-[node name="Hurtbox" parent="." instance=ExtResource("3_hurtbox")]
+[node name="Hurtbox" parent="." unique_id=1538199609 instance=ExtResource("3_hurtbox")]
 
-[node name="HealthComponent" parent="." instance=ExtResource("4_health")]
+[node name="HealthComponent" parent="." unique_id=1537816013 instance=ExtResource("4_health")]

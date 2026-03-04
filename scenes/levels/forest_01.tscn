@@ -8,7 +8,7 @@
 [ext_resource type="Shader" uid="uid://ddy4kxjvyai64" path="res://shaders/tilt_shift.gdshader" id="6_tiltshift"]
 [ext_resource type="Script" uid="uid://drqqr7hi81gab" path="res://scripts/enemies/enemy_spawner.gd" id="7_spawner"]
 [ext_resource type="PackedScene" uid="uid://cwisp0001" path="res://scenes/enemies/wisp.tscn" id="8_enemy"]
-[ext_resource type="PackedScene" path="res://scenes/effects/atmosphere.tscn" id="9_atmosphere"]
+[ext_resource type="PackedScene" uid="uid://b4osv3iqc6sys" path="res://scenes/effects/atmosphere.tscn" id="9_atmosphere"]
 
 [sub_resource type="Environment" id="Environment_1"]
 background_mode = 1
@@ -132,7 +132,8 @@ mouse_filter = 2
 
 [node name="HUD" parent="." unique_id=1882454784 instance=ExtResource("4_hud")]
 
-[node name="AtmosphereEffects" parent="." instance=ExtResource("9_atmosphere")]
+[node name="AtmosphereEffects" parent="." unique_id=1923652590 instance=ExtResource("9_atmosphere")]
+dust_color = Color(1, 1, 1, 0.4392157)
 
 [node name="EnemySpawner" type="Node3D" parent="." unique_id=1972821815]
 script = ExtResource("7_spawner")

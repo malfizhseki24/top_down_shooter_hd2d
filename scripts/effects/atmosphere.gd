@@ -20,7 +20,7 @@ class_name AtmosphereEffects
 
 @export_group("Cloud Shadows")
 @export var cloud_shadows_enabled: bool = true
-@export var cloud_shadow_size: Vector3 = Vector3(30, 10, 24)
+@export var cloud_shadow_size: Vector3 = Vector3(80, 10, 80)
 @export var cloud_shadow_intensity: float = 0.8
 @export var cloud_scroll_speed: Vector2 = Vector2(0.4, 0.28)
 @export var cloud_noise_frequency: float = 0.012
@@ -126,9 +126,9 @@ func _create_cloud_shadows() -> void:
 	var gradient := Gradient.new()
 	gradient.set_offset(0, 0.0)
 	gradient.set_color(0, Color(0, 0, 0, 0))       # low noise = no shadow
-	gradient.set_offset(1, 0.35)
+	gradient.set_offset(1, 0.4)
 	gradient.set_color(1, Color(0, 0, 0, 0))        # start transition
-	gradient.add_point(0.55, Color(0, 0, 0, cloud_shadow_intensity))  # moderate ramp
+	gradient.add_point(0.5, Color(0, 0, 0, cloud_shadow_intensity))  # sharper ramp
 	gradient.add_point(1.0, Color(0, 0, 0, cloud_shadow_intensity))
 
 	var noise_tex := NoiseTexture2D.new()
@@ -150,8 +150,10 @@ func _process(delta: float) -> void:
 	if _cloud_decal:
 		_cloud_decal.position.x += cloud_scroll_speed.x * delta
 		_cloud_decal.position.z += cloud_scroll_speed.y * delta
-		# Wrap to avoid float precision issues
-		if _cloud_decal.position.x > cloud_shadow_size.x:
-			_cloud_decal.position.x -= cloud_shadow_size.x * 2.0
-		if _cloud_decal.position.z > cloud_shadow_size.z:
-			_cloud_decal.position.z -= cloud_shadow_size.z * 2.0
+		# Wrap within half the decal size so it always covers the play area
+		var half_x := cloud_shadow_size.x * 0.25
+		var half_z := cloud_shadow_size.z * 0.25
+		if _cloud_decal.position.x > half_x:
+			_cloud_decal.position.x -= half_x * 2.0
+		if _cloud_decal.position.z > half_z:
+			_cloud_decal.position.z -= half_z * 2.0
