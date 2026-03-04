@@ -4,15 +4,13 @@
 [ext_resource type="SpriteFrames" uid="uid://bn17x8k8ibt6y" path="res://resources/player_frames.tres" id="2_frames"]
 [ext_resource type="Texture2D" uid="uid://cjp2eerqfjdtk" path="res://assets/sprites/player/blob_shadow.svg" id="3_shadow"]
 [ext_resource type="PackedScene" path="res://scenes/effects/arrow.tscn" id="4_arrow"]
+[ext_resource type="PackedScene" uid="uid://dh8qk5n2h6m7b" path="res://scenes/components/hurtbox_component.tscn" id="5_hurtbox"]
+[ext_resource type="PackedScene" uid="uid://dh0k8b0x3grmw" path="res://scenes/components/health_component.tscn" id="6_health"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_dovo2"]
 margin = 0.1
 radius = 0.17
 height = 0.6
-
-[sub_resource type="CylinderShape3D" id="CylinderShape3D_2"]
-height = 0.5
-radius = 0.25
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_1"]
 transparency = 1
@@ -48,10 +46,9 @@ shape = SubResource("CapsuleShape3D_dovo2")
 [node name="GunMarker" type="Node3D" parent="." unique_id=981664801]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0)
 
-[node name="Hurtbox" type="Area3D" parent="." unique_id=736428337]
+[node name="Hurtbox" parent="." unique_id=736428337 instance=ExtResource("5_hurtbox")]
 collision_layer = 32
 collision_mask = 16
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="Hurtbox" unique_id=157225660]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0)
-shape = SubResource("CylinderShape3D_2")
+[node name="HealthComponent" parent="." unique_id=890123789 instance=ExtResource("6_health")]
+max_health = 10

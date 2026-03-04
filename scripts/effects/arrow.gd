@@ -1,6 +1,8 @@
 ## Arrow.gd
 ## Handles arrow projectile movement in top-down view.
 ## Arrows travel in a straight line and return to pool after lifetime expires.
+## Arrows stop on collision with world geometry (trees, rocks, walls).
+## Arrows deal damage via HitboxComponent and despawn on hit.
 
 extends Area3D
 class_name Arrow
@@ -11,9 +13,20 @@ class_name Arrow
 ## Time in seconds before arrow despawns.
 @export var lifetime: float = 3.0
 
+@onready var hitbox: HitboxComponent = $Hitbox
+
 var _direction: Vector3 = Vector3.FORWARD
 var _lifetime_timer: float = 0.0
 var _is_active: bool = false
+
+
+func _ready() -> void:
+	# Connect to detect collision with world geometry (Layer 1)
+	body_entered.connect(_on_body_entered)
+
+	# Connect hitbox to despawn arrow when it hits an enemy
+	if hitbox:
+		hitbox.hit_hurtbox.connect(_on_hit_hurtbox)
 
 
 func _physics_process(delta: float) -> void:
@@ -56,3 +69,21 @@ func _despawn() -> void:
 		ObjectPool.release("Arrow", self)
 	else:
 		queue_free()
+
+
+## Handles collision with world geometry (trees, rocks, walls).
+## Arrow stops and despawns immediately on impact.
+func _on_body_entered(_body: Node) -> void:
+	if not _is_active:
+		return
+	# Arrow hit world geometry - stop and despawn
+	_despawn()
+
+
+## Handles hitting an enemy hurtbox.
+## Arrow despawns after dealing damage.
+func _on_hit_hurtbox(_hurtbox: HurtboxComponent) -> void:
+	if not _is_active:
+		return
+	# Arrow hit enemy - despawn
+	_despawn()
