@@ -10,6 +10,8 @@ signal enemy_killed(enemy: Node, position: Vector3)
 # Player events
 signal player_damaged(amount: int)
 signal player_died()
+signal player_shot()
+signal player_dashed()
 
 # Game events
 signal wave_started(wave_number: int)

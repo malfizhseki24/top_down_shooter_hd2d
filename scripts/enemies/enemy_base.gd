@@ -55,6 +55,10 @@ func _ready() -> void:
 	# Find player in scene
 	_find_player()
 
+	# Apply purple rim light for HD-2D character separation
+	if animated_sprite:
+		RimLightApplicator.apply(animated_sprite, Color(0.7, 0.5, 1.0), 0.5)
+
 	# Play idle animation
 	if animated_sprite:
 		animated_sprite.play(&"idle")

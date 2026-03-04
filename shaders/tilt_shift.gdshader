@@ -1,5 +1,5 @@
-// Tilt-Shift + Vignette Effect (Mobile-Friendly)
-// Combines tilt-shift blur with vignette darkening at screen edges
+// Tilt-Shift + Vignette + Chromatic Aberration Effect
+// Combines tilt-shift blur with vignette darkening and subtle color fringing
 
 shader_type canvas_item;
 
@@ -11,6 +11,9 @@ uniform float focus_center : hint_range(0.0, 1.0) = 0.5;
 // Vignette parameters
 uniform float vignette_intensity : hint_range(0.0, 1.0) = 0.4;
 uniform float vignette_stretch : hint_range(0.0, 2.0) = 0.5;
+
+// Chromatic Aberration parameters
+uniform float chromatic_aberration : hint_range(0.0, 5.0) = 0.0;
 
 uniform sampler2D screen_texture : hint_screen_texture, filter_linear_mipmap;
 
@@ -27,6 +30,19 @@ void fragment() {
 		color = textureLod(screen_texture, uv, blur_intensity);
 	} else {
 		color = texture(screen_texture, uv);
+	}
+
+	// === CHROMATIC ABERRATION ===
+	if (chromatic_aberration > 0.0) {
+		vec2 center = vec2(0.5, 0.5);
+		vec2 dir = uv - center;
+		float dist_ca = length(dir);
+		vec2 offset = dir * dist_ca * chromatic_aberration * 0.002;
+
+		float r = texture(screen_texture, uv + offset).r;
+		float b = texture(screen_texture, uv - offset).b;
+		color.r = r;
+		color.b = b;
 	}
 
 	// === VIGNETTE ===

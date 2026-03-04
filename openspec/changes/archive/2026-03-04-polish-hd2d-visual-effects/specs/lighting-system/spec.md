@@ -1,27 +1,6 @@
-# lighting-system Specification
+# lighting-system Specification Delta
 
-## Purpose
-TBD - created by archiving change add-lighting-setup. Update Purpose after archive.
-## Requirements
-### Requirement: Directional Sun Light
-The level SHALL have a primary directional light source that provides dramatic shadows and god ray atmosphere.
-
-#### Scenario: Sun Light Configuration
-- **GIVEN** a DirectionalLight3D node in the level scene
-- **WHEN** the light is configured for forest atmosphere
-- **THEN** the light rotation SHALL be set to a steep diagonal angle (approximately 60 degrees from vertical)
-- **AND** shadow_enabled SHALL be true
-- **AND** directional_shadow_mode SHALL be SHADOW_PSSM_2_SPLIT for quality
-- **AND** light_color SHALL be warm white (approximately Color(1.0, 0.95, 0.9))
-
-#### Scenario: Shadow Casting
-- **GIVEN** a DirectionalLight3D with shadows enabled
-- **WHEN** the scene is rendered
-- **THEN** trees SHALL cast visible shadows on the ground
-- **AND** rocks SHALL cast visible shadows
-- **AND** shadows SHALL create depth perception for gameplay
-
----
+## MODIFIED Requirements
 
 ### Requirement: Ambient Light Base
 The level SHALL have ambient lighting with cool blue tone to create warm/cool contrast with the warm directional sun light.
@@ -61,22 +40,3 @@ The level SHALL have OmniLight nodes with differentiated color temperatures for 
 - **AND** canopy areas SHALL appear coolest (shaded)
 - **AND** the rock area SHALL have reflected warm light
 - **AND** the visual temperature gradient SHALL guide the player's eye toward the clearing
-
-### Requirement: Player Shadow Casting
-The player character SHALL cast a real-time shadow on the ground for visual depth and grounding.
-
-#### Scenario: Player Shadow Configuration
-- **GIVEN** a Player node with GeometryInstance3D (CharacterBody3D)
-- **WHEN** shadow casting is configured
-- **THEN** cast_shadow SHALL be set to SHADOW_CASTING_SETTING_ON
-- **AND** the player SHALL cast shadow on ground tiles below
-
-#### Scenario: Player Shadow Visibility
-- **GIVEN** the player is moving in the level with DirectionalLight3D shadows enabled
-- **WHEN** the scene is rendered
-- **THEN** the player shadow SHALL be visible on the ground
-- **AND** the shadow SHALL move with the player position
-- **AND** the shadow SHALL enhance player grounding perception
-
----
-

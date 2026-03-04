@@ -59,6 +59,9 @@ func _ready() -> void:
 	add_to_group("players")
 	_camera = get_viewport().get_camera_3d()
 
+	# Apply warm rim light for HD-2D character separation
+	RimLightApplicator.apply(animated_sprite, Color(1.0, 0.95, 0.85), 0.5)
+
 	# Connect to animation finished signal
 	animated_sprite.animation_finished.connect(_on_animation_finished)
 
@@ -195,6 +198,8 @@ func _start_dash() -> void:
 	animated_sprite.speed_scale = 8.0
 	animated_sprite.play(&"dash")
 
+	Events.player_dashed.emit()
+
 
 func _end_dash() -> void:
 	current_state = State.NORMAL
@@ -319,6 +324,8 @@ func _shoot() -> void:
 
 	# Reset cooldown
 	_cooldown_timer = shoot_cooldown
+
+	Events.player_shot.emit()
 
 
 ## HEALTH SYSTEM HANDLERS
