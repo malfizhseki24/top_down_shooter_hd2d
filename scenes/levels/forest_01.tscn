@@ -3,11 +3,12 @@
 [ext_resource type="MeshLibrary" uid="uid://bm6x0hpqsyj6x" path="res://resources/mesh_libraries/nature_kit.meshlib" id="1_meshlib"]
 [ext_resource type="Script" uid="uid://cwnlt28e1qp03" path="res://scripts/camera/camera_follow.gd" id="2_camera"]
 [ext_resource type="PackedScene" uid="uid://b1lt0eh7dv4fs" path="res://scenes/player/player.tscn" id="3_player"]
-[ext_resource type="PackedScene" path="res://scenes/ui/hud.tscn" id="4_hud"]
+[ext_resource type="PackedScene" uid="uid://dhrdqi3kw7cjl" path="res://scenes/ui/hud.tscn" id="4_hud"]
 [ext_resource type="Script" uid="uid://crm6dji8k2kxo" path="res://scripts/utils/grid_map_painter.gd" id="5_painter"]
 [ext_resource type="Shader" uid="uid://ddy4kxjvyai64" path="res://shaders/tilt_shift.gdshader" id="6_tiltshift"]
 [ext_resource type="Script" uid="uid://drqqr7hi81gab" path="res://scripts/enemies/enemy_spawner.gd" id="7_spawner"]
 [ext_resource type="PackedScene" uid="uid://cwisp0001" path="res://scenes/enemies/wisp.tscn" id="8_enemy"]
+[ext_resource type="PackedScene" path="res://scenes/effects/atmosphere.tscn" id="9_atmosphere"]
 
 [sub_resource type="Environment" id="Environment_1"]
 background_mode = 1
@@ -84,7 +85,9 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0)
 transform = Transform3D(0.866025, -0.433013, 0.25, 0, 0.5, 0.866025, -0.5, -0.75, 0.433013, 0, 10, 0)
 light_color = Color(1, 0.95, 0.9, 1)
 shadow_enabled = true
+shadow_blur = 0.3
 directional_shadow_mode = 1
+directional_shadow_max_distance = 30.0
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=436052845]
 environment = SubResource("Environment_1")
@@ -128,6 +131,8 @@ grow_vertical = 2
 mouse_filter = 2
 
 [node name="HUD" parent="." unique_id=1882454784 instance=ExtResource("4_hud")]
+
+[node name="AtmosphereEffects" parent="." instance=ExtResource("9_atmosphere")]
 
 [node name="EnemySpawner" type="Node3D" parent="." unique_id=1972821815]
 script = ExtResource("7_spawner")

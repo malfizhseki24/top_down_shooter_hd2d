@@ -1,0 +1,8 @@
+[gd_scene format=3 uid="uid://b4osv3iqc6sys"]
+
+[ext_resource type="Script" uid="uid://dadnhofq77xkm" path="res://scripts/effects/atmosphere.gd" id="1_atmo"]
+
+[node name="AtmosphereEffects" type="Node3D" unique_id=553710722]
+script = ExtResource("1_atmo")
+dust_size = 0.02
+dust_color = Color(1, 1, 1, 0.6)
